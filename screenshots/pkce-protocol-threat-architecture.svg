@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="1000" height="500">
+  <defs>
+    <linearGradient id="bgArchPkce" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070913"/>
+      <stop offset="100%" stop-color="#03040a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="500" fill="url(#bgArchPkce)"/>
+
+  <text x="500" y="45" fill="#ffffff" font-family="-apple-system, sans-serif" font-weight="700" font-size="20" text-anchor="middle">
+    RFC 7636 PKCE Threat Architecture: Code Interception vs Cryptographic Shield
+  </text>
+
+  <!-- Left: Vulnerable Architecture -->
+  <rect x="40" y="80" width="430" height="380" rx="10" fill="#140e18" stroke="#ef4444" stroke-width="1.5"/>
+  <rect x="55" y="95" width="400" height="34" rx="6" fill="#ef4444" fill-opacity="0.2"/>
+  <text x="255" y="118" fill="#f87171" font-family="-apple-system, sans-serif" font-weight="700" font-size="14" text-anchor="middle">
+    Scenario A: Rogue App Interception (No PKCE / Plain)
+  </text>
+
+  <rect x="55" y="145" width="400" height="60" rx="6" fill="#0a0d1e" stroke="#242f5d"/>
+  <text x="70" y="170" fill="#fca5a5" font-family="monospace" font-size="11">GET /authorize?client_id=...&amp;redirect_uri=myapp://...</text>
+  <text x="70" y="190" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">No code_challenge or code_challenge_method=plain</text>
+
+  <rect x="55" y="220" width="400" height="220" rx="6" fill="#1c0f18" stroke="#ef4444" stroke-opacity="0.4"/>
+  <text x="70" y="245" fill="#f87171" font-family="-apple-system, sans-serif" font-weight="700" font-size="12">INTERCEPTION &amp; EXPLOITATION LIFECYCLE:</text>
+  <text x="70" y="275" fill="#fca5a5" font-family="-apple-system, sans-serif" font-size="11">&bull; IdP returns: myapp://oauth/callback?code=AUTH_CODE</text>
+  <text x="70" y="305" fill="#fca5a5" font-family="-apple-system, sans-serif" font-size="11">&bull; Rogue mobile app co-registered for myapp:// steals code</text>
+  <text x="70" y="335" fill="#fca5a5" font-family="-apple-system, sans-serif" font-size="11">&bull; Attacker sends POST /token with stolen code</text>
+  <text x="70" y="365" fill="#fca5a5" font-family="-apple-system, sans-serif" font-size="11">&bull; IdP issues valid access + refresh tokens to attacker</text>
+  <text x="70" y="415" fill="#ef4444" font-family="-apple-system, sans-serif" font-weight="700" font-size="12">FULL ACCOUNT COMPROMISE &amp; DATA EXFILTRATION</text>
+
+  <!-- Right: Hardened Architecture -->
+  <rect x="530" y="80" width="430" height="380" rx="10" fill="#091826" stroke="#10b981" stroke-width="1.5"/>
+  <rect x="545" y="95" width="400" height="34" rx="6" fill="#10b981" fill-opacity="0.2"/>
+  <text x="745" y="118" fill="#34d399" font-family="-apple-system, sans-serif" font-weight="700" font-size="14" text-anchor="middle">
+    Scenario B: PKCEFlowGuard Pro Zero-Trust S256 Shield
+  </text>
+
+  <rect x="545" y="145" width="400" height="60" rx="6" fill="#0a0d1e" stroke="#242f5d"/>
+  <text x="560" y="170" fill="#34d399" font-family="monospace" font-size="11">GET /authorize?...&amp;code_challenge=S256_HASH&amp;method=S256</text>
+  <text x="560" y="190" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">Raw code_verifier isolated in client memory</text>
+
+  <rect x="545" y="220" width="400" height="220" rx="6" fill="#071b22" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="560" y="245" fill="#34d399" font-family="-apple-system, sans-serif" font-weight="700" font-size="12">ZERO-TRUST SECURITY GUARANTEES:</text>
+  <text x="560" y="275" fill="#86efac" font-family="-apple-system, sans-serif" font-size="11">&bull; IdP returns: myapp://oauth/callback?code=AUTH_CODE</text>
+  <text x="560" y="305" fill="#86efac" font-family="-apple-system, sans-serif" font-size="11">&bull; Rogue app steals code, but LACKS secret code_verifier</text>
+  <text x="560" y="335" fill="#86efac" font-family="-apple-system, sans-serif" font-size="11">&bull; Attacker token request rejected: HTTP 400 invalid_grant</text>
+  <text x="560" y="365" fill="#86efac" font-family="-apple-system, sans-serif" font-size="11">&bull; Legitimate app provides verifier and receives tokens</text>
+  <text x="560" y="415" fill="#10b981" font-family="-apple-system, sans-serif" font-weight="700" font-size="12">ZERO TOKEN LEAKAGE &amp; COMPLETE PROTOCOL SHIELD</text>
+</svg>
